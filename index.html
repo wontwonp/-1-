@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+echo '<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -24,6 +24,7 @@
             text-align: center;
             color: #333;
             margin-bottom: 30px;
+            font-size: 28px;
         }
         
         .route-grid {
@@ -51,16 +52,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 20px;
             border: 2px solid #ddd;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             color: #333;
-            min-height: 60px;
+            min-height: 70px;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
         }
         
         .route-item:hover {
@@ -75,6 +77,10 @@
             font-weight: bold;
         }
         
+        .route-item:active {
+            transform: scale(0.95);
+        }
+        
         .status-section {
             background-color: #f8f9fa;
             padding: 20px;
@@ -84,25 +90,25 @@
         }
         
         .status-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #333;
             margin-bottom: 15px;
         }
         
         .status-text {
-            font-size: 16px;
+            font-size: 18px;
             line-height: 1.6;
             color: #555;
             user-select: text;
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
-            padding: 10px;
+            padding: 15px;
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 4px;
-            min-height: 60px;
+            min-height: 70px;
             display: flex;
             align-items: center;
         }
@@ -119,21 +125,22 @@
         .all-selected {
             color: #2e7d32;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 20px;
         }
         
         .copy-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 12px 18px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 18px;
             transition: background-color 0.3s ease;
+            z-index: 10;
         }
         
         .copy-btn:hover {
@@ -152,10 +159,10 @@
             background-color: #ff6b6b;
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 15px 30px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             margin-top: 20px;
             transition: background-color 0.3s ease;
             width: 100%;
@@ -169,7 +176,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
-            padding: 15px;
+            padding: 20px;
             background-color: #e3f2fd;
             border-radius: 6px;
         }
@@ -180,42 +187,48 @@
         }
         
         .stat-number {
-            font-size: 20px;
+            font-size: 28px;
             font-weight: bold;
             color: #1976d2;
         }
         
         .stat-label {
-            font-size: 12px;
+            font-size: 16px;
             color: #666;
+            margin-top: 5px;
         }
         
         /* 모바일에서 통계 폰트 크기 조정 */
         @media (max-width: 767px) {
             .stat-number {
-                font-size: 25px;
+                font-size: 24px;
             }
             
             .stat-label {
-                font-size: 20px;
+                font-size: 14px;
             }
             
             .route-item {
-                font-size: 25px;
-                padding: 12px;
-                min-height: 50px;
+                font-size: 16px;
+                padding: 15px;
+                min-height: 60px;
             }
             
             .copy-btn {
                 padding: 10px 15px;
                 font-size: 16px;
                 top: 10px;
+                right: 10px;
             }
             
             .status-text {
-                font-size: 20px;
-                padding: 8px;
-                min-height: 50px;
+                font-size: 16px;
+                padding: 12px;
+                min-height: 60px;
+            }
+            
+            h1 {
+                font-size: 24px;
             }
         }
         
@@ -227,7 +240,7 @@
             color: white;
             padding: 12px 20px;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 16px;
             z-index: 1000;
             opacity: 0;
             transform: translateY(-20px);
@@ -242,7 +255,7 @@
 </head>
 <body>
     <div class="container">
-        <h1> 금호창원1센터차량현황</h1>
+        <h1>🚌 금호창원1센터차량현황</h1>
         
         <div class="stats">
             <div class="stat-item">
@@ -264,14 +277,14 @@
         </div>
         
         <div class="status-section">
-            <div class="status-title"> 현재 상태</div>
-            <button class="copy-btn" id="copyBtn" onclick="copyStatusText()"> 복사</button>
+            <div class="status-title">📋 현재 상태</div>
+            <button class="copy-btn" id="copyBtn" onclick="copyStatusText()">📋 복사</button>
             <div class="status-text" id="statusText">
                 노선을 선택해주세요.
             </div>
         </div>
         
-        <button class="reset-btn" onclick="resetSelection()"> 선택 초기화</button>
+        <button class="reset-btn" onclick="resetSelection()">🔄 선택 초기화</button>
     </div>
     
     <div class="toast" id="toast">복사되었습니다!</div>
@@ -301,9 +314,19 @@
             updateStats();
         }
         
+        // 진동 기능
+        function vibrate() {
+            if (navigator.vibrate) {
+                navigator.vibrate(50); // 50ms 진동
+            }
+        }
+        
         // 노선 선택/해제 토글
         function toggleRoute(route) {
             const routeItem = event.target;
+            
+            // 진동 실행
+            vibrate();
             
             if (selectedRoutes.has(route)) {
                 selectedRoutes.delete(route);
@@ -422,15 +445,4 @@
         });
     </script>
 </body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
+</html>' > index.html
