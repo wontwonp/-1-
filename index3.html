@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>창원3센터차량현황</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .route-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        /* 데스크톱에서는 4개씩 */
+        @media (min-width: 1024px) {
+            .route-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .route-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            min-height: 70px;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+        }
+        
+        .route-item:hover {
+            border-color: #4CAF50;
+            background-color: #f9f9f9;
+        }
+        
+        .route-item.selected {
+            border-color: #4CAF50;
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        
+        .route-item:active {
+            transform: scale(0.95);
+        }
+        
+        .status-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            position: relative;
+        }
+        
+        .status-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .status-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #555;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .selected-routes {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .excluded-routes {
+            color: #666;
+        }
+        
+        .all-selected {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #FEE500;
+            color: #3C1E1E;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            z-index: 10;
+        }
+        
+        .copy-btn:hover {
+            background-color: #FFD700;
+        }
+        
+        .copy-btn:active {
+            background-color: #FFC700;
+        }
+        
+        .copy-btn.copied {
+            background-color: #2196F3;
+        }
+        
+        .reset-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        
+        .reset-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .back-to-counter-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        
+        .back-to-counter-btn:hover {
+            background-color: #da190b;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 6px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* 모바일에서 통계 폰트 크기 조정 */
+        @media (max-width: 767px) {
+            .stat-number {
+                font-size: 28px;
+            }
+            
+            .stat-label {
+                font-size: 20px;
+            }
+            
+            .route-item {
+                font-size: 25px;
+                padding: 15px;
+                min-height: 60px;
+            }
+            
+            .copy-btn {
+                padding: 10px 15px;
+                font-size: 16px;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .status-text {
+                font-size: 16px;
+                padding: 12px;
+                min-height: 60px;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚌 창원3센터차량현황</h1>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">전체 노선</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="selectedCount">0</div>
+                <div class="stat-label">선택된 노선</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="excludedCount">0</div>
+                <div class="stat-label">제외된 노선</div>
+            </div>
+        </div>
+        
+        <div class="route-grid" id="routeGrid">
+            <!-- 노선들이 여기에 동적으로 생성됩니다 -->
+        </div>
+        
+        <div class="status-section">
+            <div class="status-title">📋 현재 상태</div>
+            <button class="copy-btn" id="copyBtn" onclick="shareToKakao()">📱 카카오톡 공유</button>
+            <div class="status-text" id="statusText">
+                노선을 선택해주세요.
+            </div>
+        </div>
+        
+        <button class="reset-btn" onclick="resetSelection()">🔄 선택 초기화</button>
+        
+        <button class="back-to-counter-btn" onclick="goBackToCounter()">🔙 카운터로 돌아가기</button>
+    </div>
+    
+    <div class="toast" id="toast">복사되었습니다!</div>
+
+    <script>
+        // 노선 목록 (변경된 목록)
+        const routes = [
+            "거제1", "거제2", "김해1", "내서", "남포", "남포1-1", "다대1", "동래", "명지1", "명지2",
+            "마산1", "마산2", "서면", "서면2", "부암", "수영", "장유", "함안"
+        ];
+        
+        let selectedRoutes = new Set();
+        
+        // 페이지 로드 시 노선 목록 생성
+        function initializeRoutes() {
+            const routeGrid = document.getElementById("routeGrid");
+            
+            routes.forEach(route => {
+                const routeItem = document.createElement("div");
+                routeItem.className = "route-item";
+                routeItem.textContent = route;
+                routeItem.onclick = () => toggleRoute(route);
+                
+                routeGrid.appendChild(routeItem);
+            });
+            
+            updateStats();
+        }
+        
+        // 진동 기능
+        function vibrate() {
+            if (navigator.vibrate) {
+                navigator.vibrate(50); // 50ms 진동
+            }
+        }
+        
+        // 노선 선택/해제 토글
+        function toggleRoute(route) {
+            const routeItem = event.target;
+            
+            // 진동 실행
+            vibrate();
+            
+            if (selectedRoutes.has(route)) {
+                selectedRoutes.delete(route);
+                routeItem.classList.remove("selected");
+            } else {
+                selectedRoutes.add(route);
+                routeItem.classList.add("selected");
+            }
+            
+            updateStatus();
+            updateStats();
+        }
+        
+        // 상태 텍스트 업데이트
+        function updateStatus() {
+            const statusText = document.getElementById("statusText");
+            const selectedArray = Array.from(selectedRoutes);
+            const excludedArray = routes.filter(route => !selectedRoutes.has(route));
+            
+            let statusHTML = "";
+            
+            // 모든 노선이 선택된 경우
+            if (selectedArray.length === routes.length) {
+                statusHTML = `<div class="all-selected">창원3센터 차량현황 총18대 퇴근준비완료</div>`;
+            }
+            // 일부 노선이 제외된 경우
+            else if (excludedArray.length > 0) {
+                const excludedNames = excludedArray.join(",");
+                const selectedCount = selectedArray.length;
+                statusHTML = `<div class="excluded-routes">창원3센터 차량현황 ${excludedNames} 노선제외 ${selectedCount}대 퇴근준비완료</div>`;
+            }
+            // 아무것도 선택되지 않은 경우
+            else {
+                statusHTML = "노선을 선택해주세요.";
+            }
+            
+            statusText.innerHTML = statusHTML;
+        }
+        
+        // 통계 업데이트
+        function updateStats() {
+            document.getElementById("totalCount").textContent = routes.length;
+            document.getElementById("selectedCount").textContent = selectedRoutes.size;
+            document.getElementById("excludedCount").textContent = routes.length - selectedRoutes.size;
+        }
+        
+        // 선택 초기화
+        function resetSelection() {
+            selectedRoutes.clear();
+            
+            // 모든 노선 아이템에서 selected 클래스 제거
+            document.querySelectorAll(".route-item").forEach(item => {
+                item.classList.remove("selected");
+            });
+            
+            updateStatus();
+            updateStats();
+        }
+        
+        // 카운터로 돌아가기
+        function goBackToCounter() {
+            window.location.href = 'https://wontwonp.github.io/counter-app-web/';
+        }
+        
+        // 카카오톡 공유 기능
+        function shareToKakao() {
+            const statusText = document.getElementById("statusText");
+            const textToShare = statusText.textContent || statusText.innerText;
+            
+            // Web Share API 사용 (모바일에서 카카오톡 공유 가능)
+            if (navigator.share) {
+                navigator.share({
+                    text: textToShare
+                }).then(() => {
+                    showToast("공유되었습니다!");
+                }).catch((err) => {
+                    if (err.name !== 'AbortError') {
+                        // 사용자가 취소하지 않은 경우 폴백으로 복사
+                        fallbackCopyTextToClipboard(textToShare);
+                    }
+                });
+            } else {
+                // Web Share API 미지원 시 복사 기능 사용
+                fallbackCopyTextToClipboard(textToShare);
+            }
+        }
+        
+        // 폴백 복사 방법 (구형 브라우저 지원)
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand("copy");
+                if (successful) {
+                    showToast("복사되었습니다! 카카오톡으로 붙여넣기 해주세요.");
+                } else {
+                    showToast("복사에 실패했습니다.");
+                }
+            } catch (err) {
+                showToast("복사에 실패했습니다.");
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // 토스트 메시지 표시
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+            
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2000);
+        }
+        
+        // 페이지 로드 시 초기화
+        document.addEventListener("DOMContentLoaded", function() {
+            initializeRoutes();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
