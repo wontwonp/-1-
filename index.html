@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>금호창원1센터차량현황</title>
+        <title>창원1센터차량현황</title>
     <style>
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -29,16 +29,9 @@
         
         .route-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 30px;
-        }
-        
-        /* 태블릿 이상에서는 3개씩 */
-        @media (min-width: 768px) {
-            .route-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
         }
         
         /* 데스크톱에서는 4개씩 */
@@ -255,7 +248,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🚌 금호창원1센터차량현황</h1>
+        <h1>🚌 창원1센터차량현황</h1>
         
         <div class="stats">
             <div class="stat-item">
@@ -278,7 +271,7 @@
         
         <div class="status-section">
             <div class="status-title">📋 현재 상태</div>
-            <button class="copy-btn" id="copyBtn" onclick="copyStatusText()">📋 복사</button>
+            <button class="copy-btn" id="copyBtn" onclick="shareToKakao()">📱 카카오톡 공유</button>
             <div class="status-text" id="statusText">
                 노선을 선택해주세요.
             </div>
@@ -386,20 +379,26 @@
             updateStats();
         }
         
-        // 텍스트 복사 기능
-        function copyStatusText() {
+        // 카카오톡 공유 기능
+        function shareToKakao() {
             const statusText = document.getElementById("statusText");
-            const textToCopy = statusText.textContent || statusText.innerText;
+            const textToShare = statusText.textContent || statusText.innerText;
             
-            // 클립보드 API 사용
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    showToast("복사되었습니다!");
-                }).catch(() => {
-                    fallbackCopyTextToClipboard(textToCopy);
+            // Web Share API 사용 (모바일에서 카카오톡 공유 가능)
+            if (navigator.share) {
+                navigator.share({
+                    text: textToShare
+                }).then(() => {
+                    showToast("공유되었습니다!");
+                }).catch((err) => {
+                    if (err.name !== 'AbortError') {
+                        // 사용자가 취소하지 않은 경우 폴백으로 복사
+                        fallbackCopyTextToClipboard(textToShare);
+                    }
                 });
             } else {
-                fallbackCopyTextToClipboard(textToCopy);
+                // Web Share API 미지원 시 복사 기능 사용
+                fallbackCopyTextToClipboard(textToShare);
             }
         }
         
@@ -417,7 +416,7 @@
             try {
                 const successful = document.execCommand("copy");
                 if (successful) {
-                    showToast("복사되었습니다!");
+                    showToast("복사되었습니다! 카카오톡으로 붙여넣기 해주세요.");
                 } else {
                     showToast("복사에 실패했습니다.");
                 }
