@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>창원1센터차량현황</title>
+        <title>창원3센터차량현황</title>
     <style>
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -56,6 +56,9 @@
             color: #333;
             min-height: 70px;
             -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .route-item:hover {
@@ -219,7 +222,7 @@
             }
             
             .route-item {
-                font-size: 25px;
+                font-size: 5vw;
                 padding: 15px;
                 min-height: 60px;
             }
@@ -265,7 +268,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🚌 창원1센터차량현황</h1>
+        <h1>🚌 창원3센터차량현황</h1>
         
         <div class="stats">
             <div class="stat-item">
@@ -362,13 +365,13 @@
             
             // 모든 노선이 선택된 경우
             if (selectedArray.length === routes.length) {
-                statusHTML = `<div class="all-selected">창원1센터 차량현황 총18대 퇴근준비완료</div>`;
+                statusHTML = `<div class="all-selected">창원3센터 차량현황 총18대 퇴근준비완료</div>`;
             }
             // 일부 노선이 제외된 경우
             else if (excludedArray.length > 0) {
                 const excludedNames = excludedArray.join(",");
                 const selectedCount = selectedArray.length;
-                statusHTML = `<div class="excluded-routes">창원1센터 차량현황 ${excludedNames} 노선제외 ${selectedCount}대 퇴근준비완료</div>`;
+                statusHTML = `<div class="excluded-routes">창원3센터 차량현황 ${excludedNames} 노선제외 ${selectedCount}대 퇴근준비완료</div>`;
             }
             // 아무것도 선택되지 않은 경우
             else {
