@@ -125,8 +125,8 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background-color: #4CAF50;
-            color: white;
+            background-color: #FEE500;
+            color: #3C1E1E;
             border: none;
             padding: 12px 18px;
             border-radius: 6px;
@@ -137,11 +137,11 @@
         }
         
         .copy-btn:hover {
-            background-color: #45a049;
+            background-color: #FFD700;
         }
         
         .copy-btn:active {
-            background-color: #3d8b40;
+            background-color: #FFC700;
         }
         
         .copy-btn.copied {
@@ -149,7 +149,7 @@
         }
         
         .reset-btn {
-            background-color: #ff6b6b;
+            background-color: #4CAF50;
             color: white;
             border: none;
             padding: 15px 30px;
@@ -162,7 +162,24 @@
         }
         
         .reset-btn:hover {
-            background-color: #ff5252;
+            background-color: #45a049;
+        }
+        
+        .back-to-counter-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        
+        .back-to-counter-btn:hover {
+            background-color: #da190b;
         }
         
         .stats {
@@ -278,6 +295,8 @@
         </div>
         
         <button class="reset-btn" onclick="resetSelection()">🔄 선택 초기화</button>
+        
+        <button class="back-to-counter-btn" onclick="goBackToCounter()">🔙 카운터로 돌아가기</button>
     </div>
     
     <div class="toast" id="toast">복사되었습니다!</div>
@@ -377,6 +396,11 @@
             
             updateStatus();
             updateStats();
+        }
+        
+        // 카운터로 돌아가기
+        function goBackToCounter() {
+            window.location.href = 'https://wontwonp.github.io/counter-app-web/';
         }
         
         // 카카오톡 공유 기능
