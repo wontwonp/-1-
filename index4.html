@@ -304,8 +304,7 @@
     <script>
         // 노선 목록 (변경된 목록)
         const routes = [
-            "거제1", "거제2", "김해1", "내서", "남포", "남포1-1", "다대1", "동래", "명지1", "명지2",
-            "마산1", "마산2", "서면", "서면2", "부암", "수영", "장유", "함안"
+            "하단", "통영", "진주1", "진주2"
         ];
         
         let selectedRoutes = new Set();
@@ -362,7 +361,7 @@
             
             // 모든 노선이 선택된 경우
             if (selectedArray.length === routes.length) {
-                statusHTML = `<div class="all-selected">창원4센터 차량현황 총18대 퇴근준비완료</div>`;
+                statusHTML = `<div class="all-selected">창원4센터 차량현황 총4대 퇴근준비완료</div>`;
             }
             // 일부 노선이 제외된 경우
             else if (excludedArray.length > 0) {
